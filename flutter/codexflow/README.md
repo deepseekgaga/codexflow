@@ -1,4 +1,4 @@
-# CodexFlow Flutter
+# xiaoqiao-android-codex Flutter
 
 这是基于现有 Agent API 直接重写的一版 Flutter 客户端。
 

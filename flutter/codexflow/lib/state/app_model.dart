@@ -6,11 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/app_models.dart';
 import '../services/api_client.dart';
 
-enum ApprovalActionType {
-  choice,
-  decision,
-  submitText,
-}
+enum ApprovalActionType { choice, decision, submitText }
 
 class ApprovalAction {
   ApprovalAction.choice(this.value) : type = ApprovalActionType.choice;
@@ -39,8 +35,7 @@ class ApprovalAction {
 }
 
 class AppModel extends ChangeNotifier {
-  AppModel(this._prefs)
-      : baseUrlString = _prefs.getString(_baseUrlKey) ?? '';
+  AppModel(this._prefs) : baseUrlString = _prefs.getString(_baseUrlKey) ?? '';
 
   static const _baseUrlKey = 'codexflow.baseURL';
 
@@ -49,6 +44,7 @@ class AppModel extends ChangeNotifier {
   String baseUrlString;
   DashboardResponse dashboard = DashboardResponse.placeholder();
   final Map<String, SessionDetail> sessionDetails = <String, SessionDetail>{};
+  final Map<String, String> sessionLoadErrors = <String, String>{};
   bool isRefreshing = false;
   bool isBootstrapped = false;
   bool isAgentOnline = false;
@@ -111,10 +107,9 @@ class AppModel extends ChangeNotifier {
     if (!supportsApprovalsForSessionId(sessionId)) {
       return <PendingRequestView>[];
     }
-    final approvals = dashboard.approvals
-        .where((item) => item.threadId == sessionId)
-        .toList()
-      ..sort((left, right) => left.createdAt.compareTo(right.createdAt));
+    final approvals =
+        dashboard.approvals.where((item) => item.threadId == sessionId).toList()
+          ..sort((left, right) => left.createdAt.compareTo(right.createdAt));
     return approvals;
   }
 
@@ -122,9 +117,11 @@ class AppModel extends ChangeNotifier {
     try {
       final detail = await _client().sessionDetail(id);
       sessionDetails[id] = detail;
+      sessionLoadErrors.remove(id);
       connectionError = '';
       notifyListeners();
     } catch (error) {
+      sessionLoadErrors[id] = error.toString();
       connectionError = error.toString();
       notifyListeners();
     }
@@ -278,9 +275,9 @@ class AppModel extends ChangeNotifier {
       );
       await refreshDashboard();
       final session = dashboard.sessions.cast<SessionSummary?>().firstWhere(
-            (item) => item?.id == approval.threadId,
-            orElse: () => null,
-          );
+        (item) => item?.id == approval.threadId,
+        orElse: () => null,
+      );
       if (session != null) {
         await loadSession(session.id);
       }
@@ -320,10 +317,7 @@ class AppModel extends ChangeNotifier {
             scope = null;
         }
 
-        return <String, dynamic>{
-          'permissions': permissions,
-          'scope': scope,
-        };
+        return <String, dynamic>{'permissions': permissions, 'scope': scope};
       case 'userInput':
         final questionId = _firstQuestionId(approval.params) ?? 'reply';
         return <String, dynamic>{
@@ -464,8 +458,9 @@ class AppModel extends ChangeNotifier {
     if (normalized.isEmpty) {
       return;
     }
-    final exists = dashboard.agents
-        .any((item) => item.id == normalized && item.available);
+    final exists = dashboard.agents.any(
+      (item) => item.id == normalized && item.available,
+    );
     if (!exists) {
       return;
     }

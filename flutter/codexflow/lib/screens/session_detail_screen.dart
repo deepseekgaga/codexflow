@@ -153,6 +153,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
     final model = context.watch<AppModel>();
     final detail = _detail(model);
     final summary = _summary(model);
+    final loadError = model.sessionLoadErrors[widget.sessionId] ?? '';
     final capabilities = summary == null
         ? AgentCapabilities(
             supportsInterruptTurn: true,
@@ -164,8 +165,9 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
         : model.capabilitiesForSession(summary);
     final supportsApprovals = capabilities.supportsApprovals;
     final supportsInterruptTurn = capabilities.supportsInterruptTurn;
-    final supportsResume =
-        summary == null ? capabilities.supportsResume : model.canResumeSession(summary);
+    final supportsResume = summary == null
+        ? capabilities.supportsResume
+        : model.canResumeSession(summary);
     final orderedTurns = detail == null
         ? const <TurnDetail>[]
         : detail.turns.reversed.toList();
@@ -176,8 +178,9 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
     final recentTurns = orderedTurns
         .where((turn) => turn.id != activeTurn?.id)
         .toList();
-    final sessionApprovals =
-        supportsApprovals ? _sessionApprovals(model) : <PendingRequestView>[];
+    final sessionApprovals = supportsApprovals
+        ? _sessionApprovals(model)
+        : <PendingRequestView>[];
     final activeTurnApprovals = activeTurn == null
         ? const <PendingRequestView>[]
         : sessionApprovals
@@ -208,13 +211,16 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
               if (model.operationNotice.isNotEmpty) ...<Widget>[
                 Container(
                   width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
-                    color: (model.operationNoticeIsError
-                            ? Palette.danger
-                            : Palette.success)
-                        .appOpacity(0.08),
+                    color:
+                        (model.operationNoticeIsError
+                                ? Palette.danger
+                                : Palette.success)
+                            .appOpacity(0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -236,7 +242,8 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                   supportsApprovals: supportsApprovals,
                 ),
                 const SizedBox(height: 12),
-                if (supportsApprovals && remainingSessionApprovals.isNotEmpty) ...<Widget>[
+                if (supportsApprovals &&
+                    remainingSessionApprovals.isNotEmpty) ...<Widget>[
                   PanelCard(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,8 +315,9 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                       }
                     },
                     supportsInterruptTurn: supportsInterruptTurn,
-                    onInterrupt: summary.lastTurnStatus == 'inProgress'
-                            && supportsInterruptTurn
+                    onInterrupt:
+                        summary.lastTurnStatus == 'inProgress' &&
+                            supportsInterruptTurn
                         ? () async {
                             await model.interrupt(summary);
                           }
@@ -367,7 +375,45 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
                     ),
                   ],
                 ],
-              ] else
+              ] else if (loadError.isNotEmpty)
+                PanelCard(
+                  compact: true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '会话详情加载失败',
+                        style: roundedTextStyle(
+                          size: 14,
+                          weight: FontWeight.w600,
+                          color: Palette.danger,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        loadError,
+                        style: roundedTextStyle(
+                          size: 12,
+                          weight: FontWeight.w500,
+                          color: Palette.danger,
+                          height: 1.45,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      ActionButton(
+                        title: '重试加载详情',
+                        background: Palette.danger.appOpacity(0.10),
+                        foreground: Palette.danger,
+                        borderColor: Palette.danger.appOpacity(0.20),
+                        icon: Icons.refresh_rounded,
+                        onPressed: () {
+                          unawaited(_refreshSessionPage());
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              else
                 PanelCard(
                   compact: true,
                   child: Row(
@@ -411,10 +457,7 @@ class _SessionDetailScreenState extends State<SessionDetailScreen> {
 }
 
 class _SummaryCard extends StatelessWidget {
-  const _SummaryCard({
-    required this.summary,
-    required this.supportsApprovals,
-  });
+  const _SummaryCard({required this.summary, required this.supportsApprovals});
 
   final SessionSummary summary;
   final bool supportsApprovals;
@@ -473,25 +516,23 @@ class _SummaryCard extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             child: Row(
               children: <Widget>[
-                CapsuleTag(
-                  title: '托管',
-                  value: summary.loaded ? '已接管' : '未接管',
-                ),
+                CapsuleTag(title: '托管', value: summary.loaded ? '已接管' : '未接管'),
                 if (summary.isClaudeSession) ...<Widget>[
                   const SizedBox(width: 8),
                   CapsuleTag(
                     title: '链路',
                     value: summary.runtimeAvailable ? 'Runtime' : 'History',
                   ),
-                  if (summary.loaded && summary.runtimeAttachMode.isNotEmpty) ...<Widget>[
+                  if (summary.loaded &&
+                      summary.runtimeAttachMode.isNotEmpty) ...<Widget>[
                     const SizedBox(width: 8),
                     CapsuleTag(
                       title: '接管',
                       value: summary.runtimeAttachMode == 'resumed_existing'
                           ? '现有 Runtime'
                           : (summary.runtimeAttachMode == 'opened_from_history'
-                              ? '历史新开'
-                              : '新建 Runtime'),
+                                ? '历史新开'
+                                : '新建 Runtime'),
                     ),
                   ],
                 ],
@@ -652,13 +693,15 @@ class _TakeoverCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           ActionButton(
-            title: (!summary.isEnded &&
+            title:
+                (!summary.isEnded &&
                     summary.isClaudeSession &&
                     !summary.runtimeAvailable)
                 ? '当前无 Runtime'
                 : (summary.isEnded ? '重新接管会话' : 'Resume 并接管会话'),
-            background:
-                supportsResume ? Palette.softBlue : Palette.mutedInk.appOpacity(0.35),
+            background: supportsResume
+                ? Palette.softBlue
+                : Palette.mutedInk.appOpacity(0.35),
             foreground: Colors.white,
             fontSize: 14,
             enabled: supportsResume,
@@ -938,7 +981,7 @@ class _ComposerCard extends StatelessWidget {
                     FocusScope.of(context).unfocus();
                     await onEnd();
                   },
-                  ),
+                ),
               if (isSteering && !supportsInterruptTurn) ...<Widget>[
                 const SizedBox(height: 8),
                 Text(

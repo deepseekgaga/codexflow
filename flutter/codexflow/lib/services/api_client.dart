@@ -16,14 +16,25 @@ class ApiError implements Exception {
 }
 
 class ApiClient {
-  ApiClient({
-    required String baseUrlString,
-    http.Client? client,
-  })  : _baseUri = Uri.parse(baseUrlString),
-        _client = client ?? http.Client();
+  ApiClient({required String baseUrlString, http.Client? client})
+    : this._fromUri(Uri.parse(baseUrlString), client ?? http.Client());
+
+  static const appUserAgent = 'xiaoqiao-android-codex/0.1.3 Dart';
+
+  ApiClient._fromUri(Uri baseUri, this._client)
+    : _baseUri = baseUri.replace(userInfo: ''),
+      _authorizationHeader = _basicAuthorizationHeader(baseUri.userInfo);
 
   final Uri _baseUri;
   final http.Client _client;
+  final String? _authorizationHeader;
+
+  static String? _basicAuthorizationHeader(String userInfo) {
+    if (userInfo.isEmpty) {
+      return null;
+    }
+    return 'Basic ${base64Encode(utf8.encode(Uri.decodeComponent(userInfo)))}';
+  }
 
   Future<DashboardResponse> dashboard() async {
     final json = await _decodeMap('/api/v1/dashboard');
@@ -149,16 +160,15 @@ class ApiClient {
     final uri = _baseUri.resolve('/api/v1/uploads/image');
     final request = http.MultipartRequest('POST', uri)
       ..files.add(
-        http.MultipartFile.fromBytes(
-          'file',
-          bytes,
-          filename: fileName,
-        ),
+        http.MultipartFile.fromBytes('file', bytes, filename: fileName),
       );
+    _applyCommonHeaders(request.headers);
 
     late http.StreamedResponse streamed;
     try {
-      streamed = await _client.send(request).timeout(const Duration(seconds: 45));
+      streamed = await _client
+          .send(request)
+          .timeout(const Duration(seconds: 45));
     } on TimeoutException {
       throw ApiError('The image upload request timed out.');
     } catch (error) {
@@ -186,8 +196,9 @@ class ApiClient {
       return UploadedImageRef.fromJson(payload);
     }
     if (payload is Map) {
-      final map = payload
-          .map((key, dynamic value) => MapEntry(key.toString(), value));
+      final map = payload.map(
+        (key, dynamic value) => MapEntry(key.toString(), value),
+      );
       return UploadedImageRef.fromJson(map);
     }
     throw ApiError('The agent returned an invalid upload response.');
@@ -209,8 +220,9 @@ class ApiClient {
       return result;
     }
     if (result is Map) {
-      return result
-          .map((key, dynamic value) => MapEntry(key.toString(), value));
+      return result.map(
+        (key, dynamic value) => MapEntry(key.toString(), value),
+      );
     }
     throw ApiError('The agent returned an invalid response.');
   }
@@ -224,6 +236,7 @@ class ApiClient {
     final uri = _baseUri.resolve(path);
     final request = http.Request(method, uri)
       ..headers['Content-Type'] = 'application/json';
+    _applyCommonHeaders(request.headers);
 
     if (method != 'GET' || body != null) {
       request.body = jsonEncode(body ?? const <String, dynamic>{});
@@ -260,6 +273,14 @@ class ApiClient {
     return payload;
   }
 
+  void _applyCommonHeaders(Map<String, String> headers) {
+    headers['User-Agent'] = appUserAgent;
+    final authorizationHeader = _authorizationHeader;
+    if (authorizationHeader != null) {
+      headers['Authorization'] = authorizationHeader;
+    }
+  }
+
   List<Map<String, dynamic>> _buildInputs({
     required String prompt,
     required List<String> imageUploadIds,
@@ -267,20 +288,14 @@ class ApiClient {
     final inputs = <Map<String, dynamic>>[];
     final trimmed = prompt.trim();
     if (trimmed.isNotEmpty) {
-      inputs.add(<String, dynamic>{
-        'type': 'text',
-        'text': trimmed,
-      });
+      inputs.add(<String, dynamic>{'type': 'text', 'text': trimmed});
     }
     for (final id in imageUploadIds) {
       final trimmedId = id.trim();
       if (trimmedId.isEmpty) {
         continue;
       }
-      inputs.add(<String, dynamic>{
-        'type': 'image',
-        'uploadId': trimmedId,
-      });
+      inputs.add(<String, dynamic>{'type': 'image', 'uploadId': trimmedId});
     }
     return inputs;
   }

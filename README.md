@@ -1,6 +1,6 @@
-# CodexFlow
+# xiaoqiao-android-codex
 
-CodexFlow 是一个面向 Codex CLI 的控制台客户端。
+xiaoqiao-android-codex 是一个面向 Codex CLI 的 Android 优先控制台客户端。
 
 它的目标不是“远程看终端”，而是把 Codex 的会话、turn、diff、审批、状态流，整理成一套适合手机和轻量客户端管理的控制平面。
 
@@ -104,9 +104,11 @@ Client Apps
 
 ## 发布产物
 
-- Android 安装包已经发布在 GitHub Releases
+- Android 安装包可直接从仓库下载：
+  - [`releases/android/xiaoqiao-android-codex-arm64-release.apk`](releases/android/xiaoqiao-android-codex-arm64-release.apk)
+  - SHA256：`3145430a13da06801754f84db000c2d2adcee32d613a7010f877d935e09f3ed2`
 - Web 构建产物也已经发布在 GitHub Releases
-- 如果你只是想直接试用，可以优先从 GitHub Releases 下载对应版本
+- 如果你只是想直接试用 Android 版本，可以优先下载上面的 APK
 
 ## 当前状态
 

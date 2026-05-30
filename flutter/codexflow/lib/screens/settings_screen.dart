@@ -40,14 +40,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final model = context.watch<AppModel>();
-    final connectionTone =
-        model.isAgentOnline ? Palette.accent : Palette.danger;
+    final connectionTone = model.isAgentOnline
+        ? Palette.accent
+        : Palette.danger;
 
     return Scaffold(
       backgroundColor: Palette.canvas,
       appBar: AppBar(
-        title: Text('设置',
-            style: roundedTextStyle(size: 17, weight: FontWeight.w600)),
+        title: Text(
+          '设置',
+          style: roundedTextStyle(size: 17, weight: FontWeight.w600),
+        ),
         centerTitle: true,
       ),
       body: PageScaffold(
@@ -58,9 +61,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('连接设置',
-                      style:
-                          roundedTextStyle(size: 16, weight: FontWeight.w600)),
+                  Text(
+                    '连接设置',
+                    style: roundedTextStyle(size: 16, weight: FontWeight.w600),
+                  ),
                   const SizedBox(height: 12),
                   CodexTextField(
                     controller: _controller,
@@ -68,7 +72,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '填写 Mac 可被手机访问到的局域网地址，例如 `http://192.168.1.4:4318`。不要填 `0.0.0.0`，真机上也不要填 `127.0.0.1`。',
+                    '同一 Wi-Fi 下填 `http://用户名:密码@192.168.1.4:4318`。4G/外网模式填 Mac 上 4G 隧道脚本复制出的 `https://用户名:密码@...trycloudflare.com`。不要填 `0.0.0.0`，真机上也不要填 `127.0.0.1`。',
                     style: roundedTextStyle(
                       size: 13,
                       weight: FontWeight.w500,
@@ -115,9 +119,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Text(
                       'Agent 当前监听：${model.dashboard.agent.listenAddr}',
                       style: roundedTextStyle(
-                          size: 12,
-                          weight: FontWeight.w500,
-                          color: Palette.mutedInk),
+                        size: 12,
+                        weight: FontWeight.w500,
+                        color: Palette.mutedInk,
+                      ),
                     ),
                   ],
                 ],
@@ -131,13 +136,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Text('当前连接',
-                          style: roundedTextStyle(
-                              size: 16, weight: FontWeight.w600)),
+                      Text(
+                        '当前连接',
+                        style: roundedTextStyle(
+                          size: 16,
+                          weight: FontWeight.w600,
+                        ),
+                      ),
                       const Spacer(),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 6),
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
                         decoration: BoxDecoration(
                           color: connectionTone.appOpacity(0.12),
                           borderRadius: BorderRadius.circular(999),
@@ -148,16 +159,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               width: 8,
                               height: 8,
                               decoration: BoxDecoration(
-                                  color: connectionTone,
-                                  shape: BoxShape.circle),
+                                color: connectionTone,
+                                shape: BoxShape.circle,
+                              ),
                             ),
                             const SizedBox(width: 6),
                             Text(
                               model.isAgentOnline ? '在线' : '离线',
                               style: roundedTextStyle(
-                                  size: 12,
-                                  weight: FontWeight.w700,
-                                  color: connectionTone),
+                                size: 12,
+                                weight: FontWeight.w700,
+                                color: connectionTone,
+                              ),
                             ),
                           ],
                         ),
@@ -175,8 +188,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   const SizedBox(height: 8),
                   _SettingsInfoRow(
-                      title: 'Codex 路径',
-                      value: model.dashboard.agent.codexBinaryPath),
+                    title: 'Codex 路径',
+                    value: model.dashboard.agent.codexBinaryPath,
+                  ),
                   if (model.agentConnectionError.isNotEmpty) ...<Widget>[
                     const SizedBox(height: 10),
                     Container(
@@ -189,9 +203,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       child: Text(
                         model.agentConnectionError,
                         style: roundedTextStyle(
-                            size: 12,
-                            weight: FontWeight.w500,
-                            color: Palette.danger),
+                          size: 12,
+                          weight: FontWeight.w500,
+                          color: Palette.danger,
+                        ),
                       ),
                     ),
                   ],
@@ -207,33 +222,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     '使用说明',
                     style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Palette.ink),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Palette.ink,
+                    ),
                   ),
                   SizedBox(height: 8),
                   Text(
                     '1. Mac 上先启动 Agent。',
                     style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Palette.mutedInk),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Palette.mutedInk,
+                    ),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    '2. 手机填 Mac 的局域网地址。',
+                    '2. Wi-Fi 下填 Mac 局域网地址；4G 下填 HTTPS 隧道地址。',
                     style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Palette.mutedInk),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Palette.mutedInk,
+                    ),
                   ),
                   SizedBox(height: 4),
                   Text(
                     '3. 首页看会话，审批页处理授权。',
                     style: TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Palette.mutedInk),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Palette.mutedInk,
+                    ),
                   ),
                 ],
               ),
@@ -246,10 +265,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 class _SettingsInfoRow extends StatelessWidget {
-  const _SettingsInfoRow({
-    required this.title,
-    required this.value,
-  });
+  const _SettingsInfoRow({required this.title, required this.value});
 
   final String title;
   final String value;
@@ -269,7 +285,10 @@ class _SettingsInfoRow extends StatelessWidget {
           Text(
             title,
             style: roundedTextStyle(
-                size: 11, weight: FontWeight.w700, color: Palette.mutedInk),
+              size: 11,
+              weight: FontWeight.w700,
+              color: Palette.mutedInk,
+            ),
           ),
           const SizedBox(height: 4),
           Text(

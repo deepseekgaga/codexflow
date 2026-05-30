@@ -14,11 +14,11 @@ import 'widgets/common.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
-  runApp(CodexFlowApp(prefs: prefs));
+  runApp(XiaoqiaoAndroidCodexApp(prefs: prefs));
 }
 
-class CodexFlowApp extends StatelessWidget {
-  const CodexFlowApp({
+class XiaoqiaoAndroidCodexApp extends StatelessWidget {
+  const XiaoqiaoAndroidCodexApp({
     super.key,
     required this.prefs,
   });
@@ -30,7 +30,7 @@ class CodexFlowApp extends StatelessWidget {
     return ChangeNotifierProvider<AppModel>(
       create: (_) => AppModel(prefs)..bootstrap(),
       child: MaterialApp(
-        title: 'CodexFlow',
+        title: 'xiaoqiao-android-codex',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,

@@ -22,8 +22,9 @@ class DashboardScreen extends StatelessWidget {
     final filteredApprovals = model.dashboard.approvals
         .where((approval) => allowedSessionIds.contains(approval.threadId))
         .toList();
-    final loadedCount =
-        filteredSessions.where((session) => session.loaded).length;
+    final loadedCount = filteredSessions
+        .where((session) => session.loaded)
+        .length;
     final activeCount = filteredSessions
         .where((session) => session.status == 'active' && !session.isEnded)
         .length;
@@ -32,24 +33,23 @@ class DashboardScreen extends StatelessWidget {
     final managedSessions = filteredSessions
         .where((session) => session.lifecycleStage == 'managed')
         .toList();
-    final endedSessions =
-        filteredSessions.where((session) => session.lifecycleStage == 'ended').toList();
+    final endedSessions = filteredSessions
+        .where((session) => session.lifecycleStage == 'ended')
+        .toList();
     final runtimeSessions = filteredSessions
-        .where(
-          (session) => session.lifecycleStage == 'runtime_available',
-        )
+        .where((session) => session.lifecycleStage == 'runtime_available')
         .toList();
     final historySessions = filteredSessions
-        .where(
-          (session) => session.lifecycleStage == 'history_only',
-        )
+        .where((session) => session.lifecycleStage == 'history_only')
         .toList();
 
     return Scaffold(
       backgroundColor: Palette.canvas,
       appBar: AppBar(
-        title: Text('会话',
-            style: roundedTextStyle(size: 17, weight: FontWeight.w600)),
+        title: Text(
+          '会话',
+          style: roundedTextStyle(size: 17, weight: FontWeight.w600),
+        ),
         centerTitle: true,
       ),
       body: PageScaffold(
@@ -101,13 +101,16 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Container(
                   width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
-                    color: (model.operationNoticeIsError
-                            ? Palette.danger
-                            : Palette.success)
-                        .appOpacity(0.08),
+                    color:
+                        (model.operationNoticeIsError
+                                ? Palette.danger
+                                : Palette.success)
+                            .appOpacity(0.08),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -127,8 +130,10 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: 12),
                 Container(
                   width: double.infinity,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
                   decoration: BoxDecoration(
                     color: Palette.danger.appOpacity(0.08),
                     borderRadius: BorderRadius.circular(12),
@@ -136,9 +141,10 @@ class DashboardScreen extends StatelessWidget {
                   child: Text(
                     model.agentConnectionError,
                     style: roundedTextStyle(
-                        size: 12,
-                        weight: FontWeight.w500,
-                        color: Palette.danger),
+                      size: 12,
+                      weight: FontWeight.w500,
+                      color: Palette.danger,
+                    ),
                   ),
                 ),
               ],
@@ -148,8 +154,11 @@ class DashboardScreen extends StatelessWidget {
                   compact: true,
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.warning_rounded,
-                          color: Palette.warning, size: 18),
+                      Icon(
+                        Icons.warning_rounded,
+                        color: Palette.warning,
+                        size: 18,
+                      ),
                       SizedBox(width: 10),
                       Expanded(
                         child: Text(
@@ -170,16 +179,21 @@ class DashboardScreen extends StatelessWidget {
                 children: <Widget>[
                   Row(
                     children: <Widget>[
-                      Text('列表',
-                          style: roundedTextStyle(
-                              size: 16, weight: FontWeight.w600)),
+                      Text(
+                        '列表',
+                        style: roundedTextStyle(
+                          size: 16,
+                          weight: FontWeight.w600,
+                        ),
+                      ),
                       const SizedBox(width: 8),
                       Text(
                         '${filteredSessions.length}',
                         style: roundedTextStyle(
-                            size: 12,
-                            weight: FontWeight.w600,
-                            color: Palette.mutedInk),
+                          size: 12,
+                          weight: FontWeight.w600,
+                          color: Palette.mutedInk,
+                        ),
                       ),
                     ],
                   ),
@@ -297,7 +311,11 @@ class _AgentSwitchButton extends StatelessWidget {
                   ),
                 ),
                 if (isSelected)
-                  const Icon(Icons.check_rounded, size: 16, color: Palette.softBlue),
+                  const Icon(
+                    Icons.check_rounded,
+                    size: 16,
+                    color: Palette.softBlue,
+                  ),
               ],
             ),
           );
@@ -313,7 +331,11 @@ class _AgentSwitchButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            const Icon(Icons.account_tree_rounded, size: 14, color: Palette.ink),
+            const Icon(
+              Icons.account_tree_rounded,
+              size: 14,
+              color: Palette.ink,
+            ),
             const SizedBox(width: 6),
             Text(
               selectedName,
@@ -348,13 +370,18 @@ class _SessionGroup extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Text(title,
-                  style: roundedTextStyle(size: 14, weight: FontWeight.w600)),
+              Text(
+                title,
+                style: roundedTextStyle(size: 14, weight: FontWeight.w600),
+              ),
               const SizedBox(width: 8),
               Text(
                 '${sessions.length}',
                 style: roundedTextStyle(
-                    size: 12, weight: FontWeight.w600, color: Palette.mutedInk),
+                  size: 12,
+                  weight: FontWeight.w600,
+                  color: Palette.mutedInk,
+                ),
               ),
             ],
           ),
@@ -362,16 +389,19 @@ class _SessionGroup extends StatelessWidget {
           Text(
             helper,
             style: roundedTextStyle(
-                size: 13,
-                weight: FontWeight.w500,
-                color: Palette.mutedInk,
-                height: 1.45),
+              size: 13,
+              weight: FontWeight.w500,
+              color: Palette.mutedInk,
+              height: 1.45,
+            ),
           ),
           const SizedBox(height: 10),
-          ...sessions.map((session) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: SessionRow(session: session),
-              )),
+          ...sessions.map(
+            (session) => Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: SessionRow(session: session),
+            ),
+          ),
         ],
       ),
     );
@@ -379,10 +409,7 @@ class _SessionGroup extends StatelessWidget {
 }
 
 class SessionRow extends StatelessWidget {
-  const SessionRow({
-    super.key,
-    required this.session,
-  });
+  const SessionRow({super.key, required this.session});
 
   final SessionSummary session;
 
@@ -417,7 +444,9 @@ class SessionRow extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: roundedTextStyle(
-                                size: 16, weight: FontWeight.w600),
+                              size: 16,
+                              weight: FontWeight.w600,
+                            ),
                           ),
                           const SizedBox(height: 5),
                           Text(
@@ -435,9 +464,10 @@ class SessionRow extends StatelessWidget {
                           Text(
                             '更新 ${session.updatedAtDisplay}',
                             style: roundedTextStyle(
-                                size: 11,
-                                weight: FontWeight.w600,
-                                color: Palette.mutedInk),
+                              size: 11,
+                              weight: FontWeight.w600,
+                              color: Palette.mutedInk,
+                            ),
                           ),
                         ],
                       ),
@@ -457,53 +487,58 @@ class SessionRow extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: roundedTextStyle(
-                        size: 13,
-                        weight: FontWeight.w500,
-                        color: Palette.mutedInk,
-                        height: 1.45),
+                      size: 13,
+                      weight: FontWeight.w500,
+                      color: Palette.mutedInk,
+                      height: 1.45,
+                    ),
                   ),
                 ],
                 const SizedBox(height: 10),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: <Widget>[
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: <Widget>[
+                      CapsuleTag(
+                        title: '托管',
+                        value: session.loaded ? '已接管' : '未接管',
+                      ),
+                      if (session.isClaudeSession) ...<Widget>[
+                        const SizedBox(width: 8),
                         CapsuleTag(
-                          title: '托管',
-                          value: session.loaded ? '已接管' : '未接管',
+                          title: '链路',
+                          value: session.runtimeAvailable
+                              ? 'Runtime'
+                              : 'History',
                         ),
-                        if (session.isClaudeSession) ...<Widget>[
+                        if (session.loaded &&
+                            session.runtimeAttachMode.isNotEmpty) ...<Widget>[
                           const SizedBox(width: 8),
                           CapsuleTag(
-                            title: '链路',
-                            value: session.runtimeAvailable ? 'Runtime' : 'History',
-                          ),
-                          if (session.loaded &&
-                              session.runtimeAttachMode.isNotEmpty) ...<Widget>[
-                            const SizedBox(width: 8),
-                            CapsuleTag(
-                              title: '接管',
-                              value: session.runtimeAttachMode == 'resumed_existing'
-                                  ? '现有 Runtime'
-                                  : (session.runtimeAttachMode == 'opened_from_history'
+                            title: '接管',
+                            value:
+                                session.runtimeAttachMode == 'resumed_existing'
+                                ? '现有 Runtime'
+                                : (session.runtimeAttachMode ==
+                                          'opened_from_history'
                                       ? '历史新开'
                                       : '新建 Runtime'),
-                            ),
-                          ],
+                          ),
                         ],
-                        const SizedBox(width: 8),
-                        CapsuleTag(title: '来源', value: session.source),
-                        const SizedBox(width: 8),
-                        CapsuleTag(
-                          title: '分支',
-                          value:
-                              session.branch.isEmpty ? '未识别' : session.branch),
+                      ],
+                      const SizedBox(width: 8),
+                      CapsuleTag(title: '来源', value: session.source),
+                      const SizedBox(width: 8),
+                      CapsuleTag(
+                        title: '分支',
+                        value: session.branch.isEmpty ? '未识别' : session.branch,
+                      ),
                       if (session.lastTurnStatus.isNotEmpty) ...<Widget>[
                         const SizedBox(width: 8),
                         CapsuleTag(
-                            title: '最近一轮',
-                            value:
-                                _lastTurnStatusLabel(session.lastTurnStatus)),
+                          title: '最近一轮',
+                          value: _lastTurnStatusLabel(session.lastTurnStatus),
+                        ),
                       ],
                     ],
                   ),
@@ -512,10 +547,11 @@ class SessionRow extends StatelessWidget {
                 Text(
                   _actionHint,
                   style: roundedTextStyle(
-                      size: 12,
-                      weight: FontWeight.w500,
-                      color: _hintTone,
-                      height: 1.45),
+                    size: 12,
+                    weight: FontWeight.w500,
+                    color: _hintTone,
+                    height: 1.45,
+                  ),
                 ),
               ],
             ),
@@ -529,6 +565,17 @@ class SessionRow extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: ActionButton(
+                  title: '查看详情',
+                  background: Palette.softBlue.appOpacity(0.12),
+                  foreground: Palette.softBlue,
+                  borderColor: Palette.softBlue.appOpacity(0.22),
+                  icon: Icons.open_in_new_rounded,
+                  onPressed: () => _openDetail(context),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ActionButton(
                   title: _primaryButtonTitle,
                   background: _primaryBackground,
                   foreground: _primaryForeground,
@@ -539,7 +586,8 @@ class SessionRow extends StatelessWidget {
               ),
             ],
           ),
-          if (capabilities.supportsApprovals && session.pendingApprovals > 0) ...<Widget>[
+          if (capabilities.supportsApprovals &&
+              session.pendingApprovals > 0) ...<Widget>[
             const SizedBox(height: 10),
             ActionButton(
               title: '快速处理审批 (${session.pendingApprovals})',
@@ -559,7 +607,8 @@ class SessionRow extends StatelessWidget {
               },
             ),
           ],
-          if (capabilities.supportsArchive && (!session.loaded || session.isEnded)) ...<Widget>[
+          if (capabilities.supportsArchive &&
+              (!session.loaded || session.isEnded)) ...<Widget>[
             const SizedBox(height: 10),
             ActionButton(
               title: session.isEnded ? '归档已结束会话' : '从列表移除',
@@ -631,7 +680,9 @@ class SessionRow extends StatelessWidget {
     if (session.isEnded) {
       return '这个会话已经在 CodexFlow 中结束。历史和 turn 会保留；如需继续，重新接管即可。';
     }
-    if (session.isClaudeSession && session.runtimeAvailable && !session.loaded) {
+    if (session.isClaudeSession &&
+        session.runtimeAvailable &&
+        !session.loaded) {
       return 'Claude runtime 当前可见，但还没接到 CodexFlow。接管后才能继续刷新状态、处理中断和下一轮。';
     }
     if (session.isClaudeSession &&
@@ -714,8 +765,10 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable:
-          Listenable.merge(<Listenable>[_cwdController, _promptController]),
+      listenable: Listenable.merge(<Listenable>[
+        _cwdController,
+        _promptController,
+      ]),
       builder: (BuildContext context, Widget? child) {
         final trimmedCwd = _cwdController.text.trim();
         final trimmedPrompt = _promptController.text.trim();
@@ -748,17 +801,22 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                       backgroundColor: Colors.transparent,
                       appBar: AppBar(
                         centerTitle: true,
-                        title: Text('新建会话',
-                            style: roundedTextStyle(
-                                size: 17, weight: FontWeight.w600)),
+                        title: Text(
+                          '新建会话',
+                          style: roundedTextStyle(
+                            size: 17,
+                            weight: FontWeight.w600,
+                          ),
+                        ),
                         leading: TextButton(
                           onPressed: () => Navigator.of(context).pop(),
                           child: Text(
                             '关闭',
                             style: roundedTextStyle(
-                                size: 13,
-                                weight: FontWeight.w600,
-                                color: Palette.softBlue),
+                              size: 13,
+                              weight: FontWeight.w600,
+                              color: Palette.softBlue,
+                            ),
                           ),
                         ),
                       ),
@@ -775,12 +833,16 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                     children: <Widget>[
                                       Container(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 9, vertical: 6),
+                                          horizontal: 9,
+                                          vertical: 6,
+                                        ),
                                         decoration: BoxDecoration(
-                                          color: Palette.softBlue
-                                              .appOpacity(0.12),
-                                          borderRadius:
-                                              BorderRadius.circular(999),
+                                          color: Palette.softBlue.appOpacity(
+                                            0.12,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            999,
+                                          ),
                                         ),
                                         child: Text(
                                           '受控会话',
@@ -806,7 +868,9 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                   Text(
                                     '新建会话',
                                     style: roundedTextStyle(
-                                        size: 26, weight: FontWeight.w600),
+                                      size: 26,
+                                      weight: FontWeight.w600,
+                                    ),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
@@ -821,17 +885,21 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                   const SizedBox(height: 16),
                                   Row(
                                     children: <Widget>[
-                                      Text('工作目录',
-                                          style: roundedTextStyle(
-                                              size: 14,
-                                              weight: FontWeight.w600)),
+                                      Text(
+                                        '工作目录',
+                                        style: roundedTextStyle(
+                                          size: 14,
+                                          weight: FontWeight.w600,
+                                        ),
+                                      ),
                                       const Spacer(),
                                       Text(
                                         '绝对路径或 ~/repo',
                                         style: roundedTextStyle(
-                                            size: 11,
-                                            weight: FontWeight.w500,
-                                            color: Palette.mutedInk),
+                                          size: 11,
+                                          weight: FontWeight.w500,
+                                          color: Palette.mutedInk,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -845,10 +913,13 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                   const SizedBox(height: 16),
                                   Row(
                                     children: <Widget>[
-                                      Text('首条提示',
-                                          style: roundedTextStyle(
-                                              size: 14,
-                                              weight: FontWeight.w600)),
+                                      Text(
+                                        '首条提示',
+                                        style: roundedTextStyle(
+                                          size: 14,
+                                          weight: FontWeight.w600,
+                                        ),
+                                      ),
                                       const Spacer(),
                                       Text(
                                         trimmedPrompt.isEmpty
@@ -876,16 +947,20 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                   const SizedBox(height: 12),
                                   Row(
                                     children: <Widget>[
-                                      const Icon(Icons.auto_awesome,
-                                          size: 14, color: Palette.softBlue),
+                                      const Icon(
+                                        Icons.auto_awesome,
+                                        size: 14,
+                                        color: Palette.softBlue,
+                                      ),
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
                                           '支持 `~/...` 路径，创建后会立即出现在会话列表。',
                                           style: roundedTextStyle(
-                                              size: 12,
-                                              weight: FontWeight.w500,
-                                              color: Palette.mutedInk),
+                                            size: 12,
+                                            weight: FontWeight.w500,
+                                            color: Palette.mutedInk,
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -895,7 +970,9 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                     Container(
                                       width: double.infinity,
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 12, vertical: 10),
+                                        horizontal: 12,
+                                        vertical: 10,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: Palette.danger.appOpacity(0.08),
                                         borderRadius: BorderRadius.circular(12),
@@ -903,9 +980,10 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                       child: Text(
                                         _submitError,
                                         style: roundedTextStyle(
-                                            size: 13,
-                                            weight: FontWeight.w500,
-                                            color: Palette.danger),
+                                          size: 13,
+                                          weight: FontWeight.w500,
+                                          color: Palette.danger,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -929,11 +1007,13 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                         _submitError = '';
                                       });
 
-                                      final success = await appModel.startSession(
-                                        cwd: trimmedCwd,
-                                        prompt: trimmedPrompt,
-                                        agentId: appModel.selectedStartAgentId,
-                                      );
+                                      final success = await appModel
+                                          .startSession(
+                                            cwd: trimmedCwd,
+                                            prompt: trimmedPrompt,
+                                            agentId:
+                                                appModel.selectedStartAgentId,
+                                          );
 
                                       if (!mounted) {
                                         return;
@@ -944,7 +1024,8 @@ class _NewSessionSheetState extends State<NewSessionSheet> {
                                       } else {
                                         setState(() {
                                           _isCreating = false;
-                                          final connectionError = appModel.connectionError;
+                                          final connectionError =
+                                              appModel.connectionError;
                                           _submitError = connectionError.isEmpty
                                               ? '创建会话失败，请检查 Agent 状态和输入内容。'
                                               : connectionError;
