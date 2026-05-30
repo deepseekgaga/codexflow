@@ -1,5 +1,5 @@
 name: xiaoqiao_android_codex
-description: Android client for CodexFlow using the existing Agent API.
+description: Android client for xiaoqiao-android-codex using the existing Agent API.
 publish_to: "none"
 
 version: 0.1.3+4

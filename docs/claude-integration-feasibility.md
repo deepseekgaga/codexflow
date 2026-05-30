@@ -41,7 +41,7 @@ python3 scripts/claude_capability_probe.py
 
 - 当前环境下不能依赖 `codex app-server` 去发现/路由 Claude。
 
-## 3) 对 CodexFlow 的影响边界
+## 3) 对 xiaoqiao-android-codex 的影响边界
 
 在保持现有功能不受影响前提下，Claude 适配必须拆为独立后端路径：
 

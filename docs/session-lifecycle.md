@@ -2,10 +2,10 @@
 
 ## Goal
 
-CodexFlow should treat "session history" and "live runtime" as separate concerns.
+xiaoqiao-android-codex should treat "session history" and "live runtime" as separate concerns.
 
 - History answers: "what happened before"
-- Runtime answers: "what can CodexFlow control right now"
+- Runtime answers: "what can xiaoqiao-android-codex control right now"
 
 This is especially important for Claude, where transcript files and resumable
 runtime sessions are not the same thing.
@@ -16,24 +16,24 @@ Every session exposed by the agent should resolve to exactly one lifecycle
 stage:
 
 1. `managed`
-   - CodexFlow currently owns the session/runtime
+   - xiaoqiao-android-codex currently owns the session/runtime
    - The user can start a turn, steer, interrupt, end, and process approvals
 
 2. `runtime_available`
-   - CodexFlow does not currently own the session/runtime
+   - xiaoqiao-android-codex does not currently own the session/runtime
    - A live runtime is detectable on this machine
-   - The user can attach CodexFlow to that runtime
+   - The user can attach xiaoqiao-android-codex to that runtime
 
 3. `history_only`
    - History/transcript exists
    - No live runtime is currently detectable
    - The user can view history
-   - For agents that support it, CodexFlow may open a new runtime based on the
+   - For agents that support it, xiaoqiao-android-codex may open a new runtime based on the
      same history record
 
 4. `ended`
-   - CodexFlow previously managed this session, but the lifecycle was closed in
-     CodexFlow
+   - xiaoqiao-android-codex previously managed this session, but the lifecycle was closed in
+     xiaoqiao-android-codex
    - History must remain visible
    - The user may re-attach or open a new runtime later
 
@@ -70,7 +70,7 @@ stage:
 
 ### Codex
 
-- Resume means: attach CodexFlow back to the same Codex thread/runtime
+- Resume means: attach xiaoqiao-android-codex back to the same Codex thread/runtime
 
 ### Claude
 
@@ -95,7 +95,7 @@ runtime ids.
 
 Ending a session means:
 
-- CodexFlow stops managing the runtime
+- xiaoqiao-android-codex stops managing the runtime
 - Session moves to `ended`
 - History stays visible
 
@@ -109,7 +109,7 @@ It does **not** mean:
 
 Archiving means:
 
-- remove the session from CodexFlow local surfaces
+- remove the session from xiaoqiao-android-codex local surfaces
 - clear local lifecycle state
 - preserve upstream history if it exists
 

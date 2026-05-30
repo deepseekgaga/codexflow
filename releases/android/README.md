@@ -20,6 +20,6 @@ Install notes:
 1. Download the APK on an Android arm64 device.
 2. Allow installation from the browser or file manager if Android asks.
 3. Install or update the app.
-4. Configure the app with your own CodexFlow Agent URL.
+4. Configure the app with your own xiaoqiao-android-codex Agent URL.
 
 The app display name is `xiaoqiao-android-codex`. The Android application id is kept stable as `com.example.codexflow_flutter` so existing testers can update from earlier APKs.

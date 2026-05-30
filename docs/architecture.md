@@ -31,7 +31,7 @@ Planned later:
 
 ## Data Flow
 
-1. `CodexFlow Agent` starts `codex app-server --listen stdio://`
+1. `xiaoqiao-android-codex Agent` starts `codex app-server --listen stdio://`
 2. Agent initializes the JSON-RPC session
 3. Agent refreshes thread inventory and listens for notifications
 4. iOS app calls the agent HTTP API
